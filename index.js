@@ -7,8 +7,8 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 
 
 //middleware
-// app.use(cors());
-// app.use(express.json());
+app.use(cors());
+app.use(express.json());
 
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -29,6 +29,16 @@ async function run() {
     res.send(allTutorials)
     console.log(allTutorials);
    })
+  //save a tutorials data in database through post req
+  app.post('/add-tutorials', async(req, res)=> {
+    const tutorialsData = req.body
+    const result = await tutorialsCollection.insertOne(tutorialsData)
+    console.log(result);
+    res.status(201).send({...result, message:'data paisi vai thanks'})
+  })
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
