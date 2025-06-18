@@ -3,7 +3,7 @@ const cors = require('cors')
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 //middleware
@@ -37,7 +37,24 @@ async function run() {
     res.status(201).send({...result, message:'data paisi vai thanks'})
   })
 
-
+  //get a sinngle tutors by id
+  app.get('/tutorial/:id', async(req, res)=> {
+    const id = req.params.id
+      console.log(id);
+     const filter = {_id: new ObjectId(id)}
+    const tutorial = await tutorialsCollection.findOne(filter)
+    res.send(tutorial)
+    console.log(tutorial);
+   })
+  //get my tutorials by email
+  app.get('/my-tutorials/:email', async(req, res)=> {
+    const email = req.params.email
+      console.log(email);
+     const filter = {email}
+    const tutorials = await tutorialsCollection.find(filter).toArray()
+    res.send(tutorials)
+    console.log(tutorials);
+   })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
