@@ -21,7 +21,7 @@ const client = new MongoClient(process.env.MONGODB_URI, {
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
 
     const database = client.db('assignment-11-tutors');
     const tutorialsCollection = database.collection('tutorials');
@@ -101,7 +101,7 @@ async function run() {
       res.send(result);
     });
 
-    // === Book Tutorial ===
+    //  Book Tutorial 
     app.post('/book-tutorial', async (req, res) => {
       const { tutorialId, userEmail } = req.body;
       if (!tutorialId || !userEmail) {
@@ -117,14 +117,14 @@ async function run() {
       res.send({ success: true, message: 'Tutorial booked successfully' });
     });
 
-    // === Get My Booked Tutorials ===
+
     app.get('/my-booked-tutorials/:email', async (req, res) => {
       const email = req.params.email;
       const bookedTutorials = await tutorialsCollection.find({ book: email }).toArray();
       res.send(bookedTutorials);
     });
 
-    // === Review Count Increment ===
+    
     app.patch('/tutorial/:id/review', async (req, res) => {
       const id = req.params.id;
       const result = await tutorialsCollection.updateOne(
@@ -138,13 +138,13 @@ async function run() {
       }
     });
 
-    // === Root Route ===
+  
     app.get('/', (req, res) => {
       res.send('assignment-11-server-running');
     });
 
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    // await client.db("admin").command({ ping: 1 });
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Intentionally not closing the client
   }
