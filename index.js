@@ -24,6 +24,27 @@ async function run() {
   try {
    const database = client.db('assignment-11-tutors')
    const tutorialsCollection = database.collection('tutorials')
+
+ //state 
+ app.get('/stats', async (req, res) => {
+  const tutorials = await tutorialsCollection.find().toArray();
+
+  const totalTutorials = tutorials.length;
+  const totalReviews = tutorials.reduce((sum, tutorial) => sum + (parseInt(tutorial.review) || 0), 0);
+  const languages = [...new Set(tutorials.map(t => t.language.toLowerCase()))];
+  const totalLanguages = languages.length;
+  const users = [...new Set(tutorials.map(t => t.email))];
+  const totalUsers = users.length;
+
+  res.send({
+    totalTutorials,
+    totalReviews,
+    totalLanguages,
+    totalUsers
+  });
+});
+
+
    app.get('/tutorials', async(req, res)=> {
     const allTutorials = await tutorialsCollection.find().toArray()
     res.send(allTutorials)
@@ -55,7 +76,10 @@ async function run() {
     res.send(tutorials)
     console.log(tutorials);
    })
+   
+   //handle booking 
 
+   
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
