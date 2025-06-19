@@ -44,7 +44,18 @@ async function run() {
   });
 });
 
+//category language
+app.get('/tutorials-by-language/:lang', async (req, res) => {
+  const lang = req.params.lang.toLowerCase();
+  const filtered = await tutorialsCollection.find({
+    language: { $regex: new RegExp(lang, 'i') }
+  }).toArray();
+  res.send(filtered);
+});
 
+
+
+//all tutorials
    app.get('/tutorials', async(req, res)=> {
     const allTutorials = await tutorialsCollection.find().toArray()
     res.send(allTutorials)
